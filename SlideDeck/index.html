@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Stock Selection and Portfolio Variability</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Stock Selection and Portfolio Variability">
+  <meta name="author" content="Jens Berkmann">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Stock Selection and Portfolio Variability</h1>
+    <h2>The stock market -- friend or foe ?</h2>
+    <p>Jens Berkmann<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <article data-timings="">
+    <style>
+strong {
+  font-weight: bold;
+}
+</style>
+
+<h2>Introduction</h2>
+
+<ul>
+<li><p>Is it possible to make money by just buying and selling assets at the right point in times ?</p></li>
+<li><p>When looking at investment popstars like Warren Buffet, George Soros and Andre Kostolany one could come to the conclusion: <strong>yes indeed</strong></p></li>
+<li><p>When looking at most others (including finance professionals) one could rather tend to believe: <strong>sometimes yes but on average no</strong></p></li>
+<li><p>So what makes the stock market so hard to predict ?</p></li>
+<li><p>Is it just a matter of finding the right algorithm to make money ?</p></li>
+<li><p>Or is the stock market inevitably purely random and any strategy is condemned to fail in the long run ?</p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  <hgroup>
+    <h2>Are you a good investor ?</h2>
+  </hgroup>
+  <article data-timings="">
+    <h3><strong>Check your investment capability with this <a href="http://jebestock.shinyapps.io/DevelopDataProductsCourseProject/">Shiny App</a>:</strong></h3>
+
+<ul>
+<li>Choose from a set of stocks listed in the Dow Jones Industrial Index  and check how your investment value changes over time</li>
+<li>For example: 1,000 stocks of BA at closing date November 20, 2014 which was purchased 25 days back in time.</li>
+</ul>
+
+<p><img src="figures/Value_over_time.png" alt="plot of chunk Value_over_time"> </p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Constant Rebalanced Portfolios</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>It is commonly believed that due to  the inherent randomness of a stock&#39;s price it is hardly possible to make money</li>
+<li>Therefore many strategies try to identify situations where the stock prices follow a trend showing almost no or little randomness (at least for a certain period of time)</li>
+<li>Interestingly, one could even make money with purely random stocks by making use of the idea of <strong>portfolio rebalancing</strong> (Thomas Cover, Standford)</li>
+<li>Consider the following simple portfolio consisting of 2 stocks:</li>
+<li>1 stock having a constant value, i.e. a bond (even without any interest rate)</li>
+<li>1 stock doubling and halfing its price in a Bernoulli-like fashion with probability 1/2</li>
+<li>Clearly, a Kostolany-like buy-and-hold strategy will results in neither gain nor loss in the long run</li>
+<li>However, when rebalancing the relative contribution of each stock within the portfolio after each day (by buying or selling) there is an exponential profit in the long run</li>
+<li>Let&#39;s check this out on the next slide</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>An Example of a Constant Rebalanced Portfolio</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>What happens to a starting investment of 100 USD where 30% are invested into a non-variable stock and 70% into another stock rising and falling randomly (with equal probability) by 10% each day with the rebalancing strategy.<br></li>
+</ul>
+
+<pre><code class="r">b &lt;- c(0.3,0.7); Ndays&lt;-1000; x1 &lt;- rep(1,Ndays); x2 &lt;- 1.1^(1-2*rbinom(Ndays,1,0.5)) 
+x &lt;- rbind(x1,x2); DailyGrowthRates &lt;- b %*% x
+portfolioValue &lt;- 100*cumprod(DailyGrowthRates); plot(1:Ndays,portfolioValue,type=&quot;l&quot;, col=&quot;red&quot;, xlab=&quot;days&quot;, ylab=&quot;Portfolio Value in USD&quot;)
+</code></pre>
+
+<p><img src="figures/unnamed-chunk-1.png" alt="plot of chunk unnamed-chunk-1"> </p>
+
+<ul>
+<li>So what&#39;s the practical limitation of rebalancing ? <strong>It&#39;s the transaction costs which eat up your profit</strong> or you may not live long enough to see the effect of the law of large numbers !</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title=''>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Are you a good investor ?'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Constant Rebalanced Portfolios'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='An Example of a Constant Rebalanced Portfolio'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
